@@ -8,6 +8,6 @@ contract TriangleVotingEscrowTest is Test {
     TriangleVotingEscrow public tve;
 
     function setUp() public {
-        tve = new TriangleVotingEscrow();
+        tve = new TriangleVotingEscrow(address(0), 30 days);
     }
 }
