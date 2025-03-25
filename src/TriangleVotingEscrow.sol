@@ -58,9 +58,9 @@ contract TriangleVotingEscrow {
         uint256 area = 0;
         while (height > 0) {
             area += height * epochLength;
-            height = e[currentEpoch - 1];
-            area += height * epochLength;
             currentEpoch += 1;
+            height = e[currentEpoch];
+            area += height * epochLength;
         }
         return area;
     }
