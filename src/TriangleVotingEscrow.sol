@@ -43,6 +43,39 @@ contract TriangleVotingEscrow {
         }
     }
 
+    // Takes a dot on the curve and draws a new line to an epoch with zero height
+    function extend(uint256 until) public {
+        uint256 currentEpoch = block.timestamp / epochLength;
+        require(currentEpoch < until, "until must be in the future");
+        require(escrowedAt[msg.sender][until] == 0, "until must be at zero height");
+
+        // Get current locked amount
+        uint256 currentHeight = interpolateHeight(
+            escrowedAt[msg.sender][currentEpoch],
+            escrowedAt[msg.sender][currentEpoch + 1],
+            epochLength,
+            block.timestamp % epochLength
+        );
+
+        // Remove previous vest effects
+        for (uint256 i = currentEpoch; i < until; i++) {
+            uint256 height = escrowedAt[msg.sender][i];
+            if (height == 0) break;
+            totalEscrowedAt[i] -= height;
+        }
+
+        // Calculate new height for extended period
+        uint256 lastEpochEnd = until * epochLength;
+        uint256 height = currentHeight * (until - currentEpoch) * epochLength / (lastEpochEnd - block.timestamp);
+
+        // Update escrow records for extended period
+        for (uint256 i = currentEpoch; i < until; i++) {
+            totalEscrowedAt[i] += height;
+            escrowedAt[msg.sender][i] = height;
+            height = height * (until - i - 1) / (until - i);
+        }
+    }
+
     // Only works if time is after the start of the first epoch
     function votingPowerOf(address user, uint256 time) public view returns (uint256) {
         return calculateArea(escrowedAt[user], time);

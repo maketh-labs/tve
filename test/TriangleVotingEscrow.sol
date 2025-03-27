@@ -46,4 +46,25 @@ contract TriangleVotingEscrowTest is Test {
         assertEq(tve.escrowedAt(user, 1), 1000 ether * 2, "escrowedAt should be 1000 ether");
         assertEq(tve.votingPowerOf(user, block.timestamp), 1000 ether * 15 days / 2, "votingPower");
     }
+
+    function test_extend() public {
+        vm.prank(user);
+        tve.vest(user, 1000 ether, 0);
+
+        vm.prank(user);
+        tve.extend(3); // day 90
+
+        uint256 y_intercept = 1000 ether * 4 / uint256(3);
+
+        assertEq(tve.totalEscrowedAt(1), y_intercept, "totalEscrowedAt 1");
+        assertEq(tve.totalEscrowedAt(2), y_intercept / 2, "totalEscrowedAt 2");
+        assertEq(tve.totalEscrowedAt(3), 0, "totalEscrowedAt 3");
+        assertEq(tve.escrowedAt(user, 1), y_intercept, "escrowedAt 1");
+        assertEq(tve.escrowedAt(user, 2), y_intercept / 2, "escrowedAt 2");
+        assertEq(tve.escrowedAt(user, 3), 0, "escrowedAt 3");
+
+        // Just assert if they are close enough.
+        assertLe(tve.votingPowerOf(user, block.timestamp) * 1000 / (1000 ether * 45 days / 2), 1001, "votingPower");
+        assertGe(tve.votingPowerOf(user, block.timestamp) * 1000 / (1000 ether * 45 days / 2), 999, "votingPower");
+    }
 }
