@@ -1,17 +1,10 @@
-## Foundry
+# Triangle Voting Escrow
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Introduction
 
-Foundry consists of:
+Triangle Voting Escrow (TVE) implements voting with linearly vesting tokens. In traditional voting escrow models, participants had their entire supply locked until a cliff to prevent any sort of selling. This ultimately hurt long-term stakers, as they were completely locked in while others chose not to stake, creating an imbalance in choices.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
+TVE offers a more balanced approach: participants can stake enough to engage meaningfully in governance, while still having the option to DCA out as tokens vest. By introducing this flexibility, TVE removes the psychological barrier to staking and makes long-term alignment feel less like a trap.
 
 ## Usage
 
@@ -43,12 +36,6 @@ $ forge snapshot
 
 ```shell
 $ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
 ```
 
 ### Cast
