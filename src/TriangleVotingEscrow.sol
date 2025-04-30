@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /// @title Triangle Voting Escrow
 /// @notice A voting escrow that uses linear vesting tokens to represent voting power.
@@ -37,7 +38,7 @@ contract TriangleVotingEscrow {
         for (uint256 i = 0; i < epochs + 1; i++) {
             totalEscrowedAt[currentEpoch + i] += height;
             escrowedAt[user][currentEpoch + i] += height;
-            height = height * epochs / (epochs + 1);
+            height = height * (epochs - i) / (epochs - i + 1);
         }
     }
 
